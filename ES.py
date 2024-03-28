@@ -1,6 +1,7 @@
 # import
 from colorama import*
 
+import hashlib
 import os
 import time
 import socket
@@ -660,11 +661,10 @@ def check_internet_connection():
         return False, None
     
 def verif_version():
-    """
     try:
         local=os.getcwd()
         os.chdir(location)
-        fetch_file("https://raw.githubusercontent.com/1ventorus/emergency-system/main/version.txt", "online_version.txt")
+        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.txt", "online_version.txt")
         with open("online_version.txt", "r") as online_data:
             data_online_version=online_data.read()
             version_online=data_online_version.splitlines()
@@ -675,7 +675,7 @@ def verif_version():
         error_message = f"an error occurred: {e}"
         session_start_time = datetime.datetime.now()
         if devmode=="yes":
-            create_session_log(session_start_time, status=error_message)"""
+            create_session_log(session_start_time, status=error_message)
 
     online_version = "0.10.5"
     if online_version==offline_version:
@@ -689,6 +689,11 @@ def verif_version():
         print("faite une mise a jour si votre version est inferieur a la version en ligne")
         print("sinon vous bénéficier sûrement d'une version de test")
 
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(stored_hash, provided_password):
+    return stored_hash == hash_password(provided_password)
 
 def list_users():
     # Obtenir la liste des éléments dans le répertoire actuel
@@ -980,7 +985,7 @@ try:
         try:
             local=os.getcwd()
             os.chdir(location)
-            fetch_file("https://raw.githubusercontent.com/1ventorus/emergency-system/main/version.txt", "online_version.txt")
+            fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.txt", "online_version.txt")
             with open("online_version.txt", "r") as online_data:
                 data_online_version=online_data.read()
                 version_online=data_online_version.splitlines()
@@ -1227,7 +1232,7 @@ try:
                     password=input(entry())
                     create_log(password)
                     General_Parameters()
-                    if password==pass_save:
+                    if verify_password(pass_save, password):
                         if admin=="admin":
                             admin="user"
                             def linux_command():
@@ -1308,6 +1313,7 @@ try:
                             else:
                                 print("entrez un mot de passe")
                                 password=input(entry())
+                                password = hash_password(password)
                                 create_log(password)
                                 print(couleur)
                                 try:
@@ -1396,6 +1402,7 @@ try:
                     General_Parameters()
                     print("nouveau mot de passe")
                     password=input(entry())
+                    password = hash_password(password)
                     create_log(password)
                     with open(os.path.join(user, "system", "logs.txt"), "w+") as logs:
                         logs.write(password)

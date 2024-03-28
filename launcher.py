@@ -1,4 +1,5 @@
 from colorama import *
+import hashlib
 import os
 import time
 import getpass
@@ -70,7 +71,8 @@ def create_user_directory(user, password):
 
         # Écrire les informations de connexion dans logs.txt
         with open(os.path.join(user_path, "system", "logs.txt"), "w+") as logs:
-            logs.write(password)
+            password_hached = hash_password(password)
+            logs.write(password_hached)
         print("Logs.txt créé avec succès.")
         with open(os.path.join(user_path, "system", "admin.txt"), "w+") as admin:
             admin.write("user" + "\n" + "no")
@@ -120,6 +122,14 @@ def launch():
 def loading():
     launch()
     os.system(clear)
+
+
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(stored_hash, provided_password):
+    return stored_hash == hash_password(provided_password)
 
 def close():
     load3 = 1
@@ -212,9 +222,10 @@ while True:
         with open(os.path.join(user, "system","logs.txt"), "r") as file:
             info = file.read()
             password_data = info.splitlines()
-            password_save = password_data[0]
-            pass_save=password_save
-        if password==pass_save:
+            pass_save = password_data[0]
+            
+        
+        if verify_password(pass_save, password):
             os.system("python ES.py")
             hall()
         else:
