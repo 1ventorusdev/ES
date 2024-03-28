@@ -1,0 +1,27 @@
+[16:36:57 03/14/2024] Session created
+[16:37:06] log: parametre
+[16:37:13] log: info
+[16:38:55] log: view log
+[16:39:24] log: open r11
+[16:39:35] log: clea
+[16:39:38] log: clear
+[16:40:06] log: open ho11
+[16:40:24] log: close
+[16:40:41] log: close
+[16:41:02] log: aide
+[16:41:11] log: cd
+[16:41:21] log: winver
+[16:41:44] log: os
+[16:42:23] log: clae
+[16:42:32] log: clear
+[16:42:45] log: IPinfo
+[16:43:02] log: MACinfo
+[16:43:15] log: cleaer
+[16:43:27] log: clear
+[16:44:32] log: fm
+[16:45:29] log: ch..
+[16:45:39] log: ch..
+[16:45:49] log: ch..
+[16:46:14] log: fm
+[16:46:22 03/14/2024] session closed because an error occurred: [Errno 2] No such file or directory: 'test\\sys_apps\\save_local.txt'
+[16:46:22 03/14/2024] Session closed

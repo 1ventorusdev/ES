@@ -1,0 +1,5 @@
+[16:35:01 03/14/2024] Session created
+[16:35:09] log: parametre
+[16:35:12] log: info
+[16:35:17 03/14/2024] session closed because an error occurred: name 'fore' is not defined
+[16:35:17 03/14/2024] Session closed

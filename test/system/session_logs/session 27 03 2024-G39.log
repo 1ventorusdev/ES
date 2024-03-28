@@ -1,0 +1,20 @@
+[12:23:19 03/27/2024] Session created
+[12:23:33] log: hn
+[12:23:45] log: hn
+[12:23:57] log: shutdown /?
+[12:24:08] log: shutdown /s
+[12:24:22] log: shutdown /A
+[12:24:25] log: shutdown /a
+[12:24:56] log: hn
+[12:25:01] log: bat
+[12:25:25] log: bat
+[12:25:27] log: bat
+[12:25:28] log: bat
+[12:25:29] log: bat
+[12:25:30] log: bat
+[12:25:51] log: bat
+[12:25:58] log: bat
+[12:25:59] log: bat
+[12:25:59] log: bat
+[12:27:02] log: close
+[12:27:03 03/27/2024] Session closed
