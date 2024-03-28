@@ -52,7 +52,7 @@ def maj():
         os.remove("maj.py")
         if os.exists.path("maj_suite.py"):
             os.remove("maj_suite.py")
-        fetch_file("https://raw.githubusercontent.com/1ventorus/emergency-system/main/test/sys_apps/maj_suite.py", "maj_suite.py")
+        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/maj_suite.py", "maj_suite.py")
 
 if connected:
     maj()
