@@ -702,7 +702,7 @@ def check_internet_connection():
 def verif_version():
     try:
         os.chdir(location)
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.txt", "online_version.txt")
+        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.ver", "online_version.txt")
         with open("online_version.txt", "r") as online_data:
             data_online_version=online_data.read()
             version_online=data_online_version.splitlines()

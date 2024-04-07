@@ -31,7 +31,7 @@ def maj():
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/launcher.py", "launcher.py")
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/ES.py", "ES.py")
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/ES_setup.py", "ES_setup.py")
-    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.txt", "version.ver")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.ver", "version.ver")
     os.chdir("test")
     os.chdir("sys_apps")
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/cmd.py", "cmd.py")
