@@ -1,5 +1,3 @@
-testpy : test\programs\tool\testpy.py
-testbat : test\programs\tool\testbat.bat
 toolbox_set-up : test\programs\tool\toolbox_set-up.py
 toolbox_win : test\programs\tool\toolbox\toolbox_win.py
 toolbox_maj : test\programs\tool\toolbox\toolbox_maj.py

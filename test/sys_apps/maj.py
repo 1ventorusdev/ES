@@ -41,7 +41,7 @@ def maj():
     os.remove("ES.py")
     if os.path.exists("ES_setup.py"):
         os.remove("ES_setup.py")
-    os.remove("version.txt")
+    os.remove("version.ver")
     os.chdir("test")
     os.chdir("sys_apps")
     os.remove("cmd.py")

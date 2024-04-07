@@ -59,9 +59,10 @@ def install():
 
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/launcher.py", "launcher.py")
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/ES.py", "ES.py")
-    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.txt", "version.txt")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.ver", "version.ver")
     os.system("pip install colorama")
     os.system("pip install psutil")
+    os.system("pip install wmi")
     os.mkdir("test")
     sys_apps_dir = os.path.join("test", "sys_apps")
     os.mkdir(sys_apps_dir)
@@ -91,11 +92,9 @@ def install():
     os.mkdir(games_dir)
     tool_dir = os.path.join(programs_dir, "tool")
     os.mkdir(tool_dir)
-    os.chdir(tool_dir)
-    fetch_file("https://raw.githubusercontent.com/1ventorus/toolbox/main/toolbox_setup.py", "toolbox_setup.py")
     os.chdir(locat)
     print("installation terminé")
-    print("vous pouvez fermer l'installateur")
+    print("vous pouvez fermer l'installateur et lancer ES a l'endroit où vous l'avez enregistré dans le dossier ES")
 
 
 
@@ -111,6 +110,20 @@ while True:
 
     if launch=="o" or launch=="y":
         hall()
+        while True:
+            location = input("entrez le chemin souhaitez d'installation (defaut : à cette position dans le dossier ES): ")
+            if location == "":
+                os.mkdir("ES")
+                os.chdir("ES")
+                break
+            else:
+                try:
+                    os.chdir(location)
+                    os.mkdir("ES")
+                    os.chdir("ES")
+                    break
+                except FileNotFoundError:
+                    print("il semble que ce chemin d'acces n'existe pas")
         if not os.path.exists("test"):
             if connected:
                 install()
