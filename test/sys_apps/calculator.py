@@ -12,11 +12,11 @@ BANNER=("""
  """)
 
 Help=("""
-entrez un calcul telsque :
+entrez un calcul tels que :
  x : *
  - : -
  + : +
- puissance : **x (x le nombre de la puissance)
+ puissance : ** x (x le nombre de la puissance)
  division : /
 
  """)
@@ -41,7 +41,17 @@ while True:
     if calcul=="close":    
         break
     else: 
-        hall()   
-        res=int(calcul)
-        result=res
-        print(calcul, " = ", result)
+        hall() 
+        calcul_base = calcul  
+        calcul = calcul.split()
+        if calcul[1] == "+":
+            result = int(calcul[0]) + int(calcul[2])
+        elif calcul[1] == "*":
+            result = int(calcul[0]) * int(calcul[2])
+        elif calcul[1] == "-":
+            result = int(calcul[0]) - int(calcul[2])
+        elif calcul[1] == "/":
+            result = int(calcul[0]) / int(calcul[2])
+        elif calcul[1] == "**":
+            result = int(calcul[0]) **int(calcul[2])
+        print(calcul_base, " = ", result)

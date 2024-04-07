@@ -24,31 +24,20 @@ connected, ssl_version = check_internet_connection()
 def fetch_file(url, filename):
     urllib.request.urlretrieve(url, filename)
 
-def list_users():
-    locat=os.getcwd()
-    os.chdir("user")
-    items = os.listdir()
-    users = [item for item in items if os.path.isdir(item)]
-
-    os.chdir(locat)
-    return users
 
 def maj():
-    users = list_users()
-
-    for user in users:
-        parentdir()
-        parentdir()
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/launcher.py", "launcher.py")
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/ES.py", "ES.py")
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/ES_setup.py", "ES_setup.py")
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.txt", "version.txt")
-        os.chdir(user)
-        os.chdir("sys_apps")
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/cmd.py", "cmd.py")
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/store.py", "store.py")
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/file_manager.py", "file_manager.py")
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/task_manager.py", "task_manager.py")
-        fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/maj.py", "maj.py")
+    parentdir()
+    parentdir()
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/launcher.py", "launcher.py")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/ES.py", "ES.py")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/ES_setup.py", "ES_setup.py")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.txt", "version.ver")
+    os.chdir("test")
+    os.chdir("sys_apps")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/cmd.py", "cmd.py")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/store.py", "store.py")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/file_manager.py", "file_manager.py")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/task_manager.py", "task_manager.py")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/sys_apps/maj.py", "maj.py")
 
 maj()

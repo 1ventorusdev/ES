@@ -1,0 +1,15 @@
+testpy : test\programs\tool\testpy.py
+testbat : test\programs\tool\testbat.bat
+toolbox_set-up : test\programs\tool\toolbox_set-up.py
+toolbox_win : test\programs\tool\toolbox\toolbox_win.py
+toolbox_maj : test\programs\tool\toolbox\toolbox_maj.py
+maj : test\sys_apps\maj.py
+calculator : test\sys_apps\calculator.py
+cmd : test\sys_apps\cmd.py
+store : test\sys_apps\store.py
+file_manager : test\sys_apps\file_manager.py
+task_manager : test\sys_apps\task_manager.py
+maj_suite : test\sys_apps\maj_suite.py
+contact : test\sys_apps\contact.py
+cleaner : test\sys_apps\cleaner.py
+webrowser : test\sys_apps\webrowser.py

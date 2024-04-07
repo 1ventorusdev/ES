@@ -12,32 +12,27 @@ elif system == "Linux":
     directory = "ls"
 else:
     clear = "erreur"
-direct = os.getcwd()
 
 couleur = Fore.GREEN
 command_colors = Fore.CYAN
 text_colors = Fore.BLUE
 
-with open("save_local.txt", "r") as local:
-    locat = local.read()
-    loc = locat.splitlines()
-    cd = loc[0]
-locat = os.getcwd()
-os.chdir(cd)
-
-with open("version.txt", "r") as offline_data:
+os.chdir("..")
+os.chdir("..")
+direct = os.getcwd()
+with open("version.ver", "r") as offline_data:
         data_version=offline_data.read()
         version=data_version.splitlines()
 
         offline_version=version[0]
 
-with open("user.txt", "r") as datafile:
+with open("user.dta", "r") as datafile:
     data = datafile.read()
     usersave = data.splitlines()
     user = usersave[0]
 
 linux_command = (
-    f"{command_colors}┌─[{text_colors}file manager 0.10.3{command_colors}]─[{text_colors}administrator system{command_colors}]─[{text_colors}~{command_colors}]\n"
+    f"{command_colors}┌─[{text_colors}file manager {offline_version}{command_colors}]─[{text_colors}administrator system{command_colors}]─[{text_colors}~{command_colors}]\n"
     f"{command_colors}└──╼[{text_colors}★{command_colors}]$>>>{text_colors} ")
 win_command=text_colors + os.getcwd() + command_colors + ">>>" + text_colors 
     
@@ -90,7 +85,6 @@ else:
     entry = linux_command
     couleur = Fore.GREEN
 
-os.chdir(locat)
 
 def display_running_processes():
     print("Liste des processus en cours d'exécution:")
@@ -106,7 +100,7 @@ def hall():
     print("   -close : ferme task manager")
     print("   -clear : recharge l'affichage de task manager")
 
-os.chdir(cd)
+os.chdir(direct)
 hall()
 while True:
     print(direct)
@@ -122,5 +116,3 @@ while True:
     else:
         hall()
         print("je n'ai pas compris")
-
-# generate a system for kill selected taskp

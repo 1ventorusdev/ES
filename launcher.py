@@ -49,25 +49,9 @@ def create_user_directory(user, password):
 
         os.mkdir(user_path)
 
-        # Créer le répertoire sys_apps et copier les fichiers de référence
-        sys_apps_path = os.path.join(user_path, "sys_apps")
-        os.mkdir(sys_apps_path)
-        shutil.copy(os.path.join(local1, "test", "sys_apps", "cmd.py"), sys_apps_path)
-        print("cmd.py copié avec succès.")
-        shutil.copy(os.path.join(local1, "test", "sys_apps", "store.py"), sys_apps_path)
-        print("store.py copié avec succès.")
-        shutil.copy(os.path.join(local1, "test", "sys_apps", "file_manager.py"), sys_apps_path)
-        print("file_manager.py copié avec succès.")
-        shutil.copy(os.path.join(local1, "test", "sys_apps", "task_manager.py"), sys_apps_path)
-        print("task_manager.py copié avec succès.")
-        shutil.copy(os.path.join(local1, "test", "sys_apps", "maj.py"), sys_apps_path)
-        print("maj.py copié avec succès.")
 
         # Créer les répertoires system, programs, games et tool
         os.mkdir(os.path.join(user_path, "system"))
-        os.mkdir(os.path.join(user_path, "programs"))
-        os.mkdir(os.path.join(user_path, "programs", "games"))
-        os.mkdir(os.path.join(user_path, "programs", "tool"))
 
         # Écrire les informations de connexion dans logs.txt
         with open(os.path.join(user_path, "system", "logs.txt"), "w+") as logs:
@@ -95,10 +79,10 @@ def print_users():
     print("Utilisateurs disponibles:")
     users = list_users()
 
-    if not users:
-        print("Aucun utilisateur trouvé.")
-    else:
-        for user in users:
+    for user in users:
+        if user == "test":
+            pass
+        else:
             print(f"- {user}")
 
 def launch():
@@ -122,7 +106,6 @@ def launch():
 def loading():
     launch()
     os.system(clear)
-
 
 
 def hash_password(password):
@@ -156,10 +139,17 @@ def closing():
     os.system(clear)
 
 loading()
+with open("etat.dta", "w+") as dta:
+    dta.write("launching")
 print(couleur)
 
 hall()
 while True:
+    with open("etat.dta", "r") as dta:
+        data = dta.read()
+    if data == "exit":
+        break
+
     os.chdir(local)
     print("entrez votre nom d'utilisateur ou close pour quitter")
     print("si l'utilisateur entré n'existe pas il en créera un nouveau")
@@ -170,21 +160,14 @@ while True:
     user = input(command_colors + ">>>")
     print(couleur)
     os.system(clear)
-    with open("user.txt", "w+") as data:
-            userdata=user
-
-            data.write(userdata)
-            data.close()
-    
     if user == "close":
-        closing()
-        os.system(clear)
-        print("au revoir !")
-        time.sleep(2)
-        os.system(clear)
         break
 
-    elif user == "invite" or user == "i":
+    with open("user.dta", "w+") as data:
+            userdata=user
+            data.write(userdata)
+    
+    if user == "invite" or user == "i":
         hall()
         password = "invite"
         create_user_directory(user, password)
@@ -232,3 +215,8 @@ while True:
             hall()
             print(Fore.RED + "mauvais mot de passe")
             print(couleur)
+closing()
+os.system(clear)
+print("au revoir !")
+time.sleep(2)
+os.system(clear)

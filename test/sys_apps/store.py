@@ -74,10 +74,9 @@ def hall():
 def fetch_file(url, filename):
     urllib.request.urlretrieve(url, filename)
 
-with open("save_local.txt", "r") as local:
-    locat=local.read()
-    loc=locat.splitlines()
-    cd=loc[0]
+os.chdir("..")
+os.chdir("..")
+cd = os.getcwd()
 
 
 
@@ -88,23 +87,23 @@ while True:
     if app=="toolbox":
         os.chdir(cd)
         hall()
-        if os.path.exists(r"programs\tool\toolbox\toolbox_setup.py"):
+        if os.path.exists(r"test\programs\tool\toolbox\toolbox_setup.py"):
             print("vous possédez déja l'application")
         else:
             if connected: 
-                os.chdir(r"programs\tool")   
-                fetch_file("https://raw.githubusercontent.com/1ventorus/toolbox/main/toolbox_setup.py", "toolbox_setup.py")
+                os.chdir(r"test\programs\tool")   
+                fetch_file("https://raw.githubusercontent.com/1ventorusdev/toolbox/main/toolbox_set-up.py", "toolbox_set-up.py")
             else:
                 print("Le PC n'est pas connecté à Internet. ❌")
 
     elif app=="life evol":
         os.chdir(cd)
         hall()
-        if os.path.exists(r"programs\games\life_evol_setup.py"):
+        if os.path.exists(r"test\programs\games\life_evol_setup.py"):
             print("vous possédez déja l'application")
         else:
             if connected: 
-                os.chdir(r"programs\games")       
+                os.chdir(r"test\programs\games")       
                 fetch_file("https://raw.githubusercontent.com/1ventorus/life_evol/main/life_evol_setup.py", "life_evol_setup.py")
             else:
                 print("Le PC n'est pas connecté à Internet. ❌")
@@ -112,16 +111,14 @@ while True:
     elif app=="nuclear ingenior":
         os.chdir(cd)
         hall()
-        if os.path.exists(r"programs\games\nuclear_ingenior_setup.py"):
+        if os.path.exists(r"test\programs\games\nuclear_ingenior_setup.py"):
             print("vous possédez déja l'application")
         else:
             if connected: 
-                os.chdir(r"programs\games")   
+                os.chdir(r"test\programs\games")   
                 fetch_file("https://raw.githubusercontent.com/1ventorus/life_evol/main/nuclear_setup.py", "life_evol_setup.py")
             else:
                 print("Le PC n'est pas connecté à Internet. ❌")
 
     elif app=="close":
         break
-
-    

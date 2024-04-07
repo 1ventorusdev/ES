@@ -9,25 +9,22 @@ couleur = Fore.GREEN
 command_colors = Fore.CYAN
 text_colors = Fore.BLUE
 
-with open("save_local.txt", "r") as local:
-    locat = local.read()
-    loc = locat.splitlines()
-    cd = loc[0]
-locat = os.getcwd()
-os.chdir(cd)
-with open("version.txt", "r") as offline_data:
+os.chdir("..")
+os.chdir("..")
+direct = os.getcwd()
+with open("version.ver", "r") as offline_data:
         data_version=offline_data.read()
         version=data_version.splitlines()
 
         offline_version=version[0]
 
-with open("user.txt", "r") as datafile:
+with open("user.dta", "r") as datafile:
     data = datafile.read()
     usersave = data.splitlines()
     user = usersave[0]
 
 linux_command = (
-    f"{command_colors}┌─[{text_colors}CMD 0.10.3{command_colors}]─[{text_colors}administrator system{command_colors}]─[{text_colors}~{command_colors}]\n"
+    f"{command_colors}┌─[{text_colors}CMD {offline_version}{command_colors}]─[{text_colors}administrator system{command_colors}]─[{text_colors}~{command_colors}]\n"
     f"{command_colors}└──╼[{text_colors}★{command_colors}]$>>>{text_colors} ")
 win_command=text_colors + os.getcwd() + command_colors + ">>>" + text_colors 
 
@@ -98,7 +95,7 @@ def hall():
     print(ver)
     print("x-storm software")
 
-os.chdir(cd)
+os.chdir(direct)
 hall()
 while True:
     command = input(command_colors + entry)

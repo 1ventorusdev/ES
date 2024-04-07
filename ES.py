@@ -1,6 +1,5 @@
 # import
 from colorama import*
-
 import hashlib
 import os
 import time
@@ -16,7 +15,7 @@ import datetime
 import string
 import glob
 import wmi
-
+import subprocess
 
 # affichage
 BANNER =("""
@@ -113,7 +112,7 @@ gen_parameters_admin=("""
  | info : donne les toute les info de ES                                   |
  | user : permet de gerer les utilisateur de ES ainsi que leur donnée      |
  | maj : met à jour ES                                                     |
- | logs : permet de modifier le mot de passe du compte                     |
+ | password (pw) : permet de modifier le mot de passe du compte            |
  | view log : affiche les rapport de log si le mode dev est activé         |
  | admin : permet d'activer ou de désactiver le mode administrateur        |
  | close : retourne dans ES                                                |
@@ -127,7 +126,7 @@ gen_parameters_user=("""
  | commande : accede au parametre des commandes                            |
  | info : donne les toute les info de ES                                   |
  | maj : met à jour ES                                                     |
- | logs : permet de modifier le mot de passe du compte                     |
+ | password (pw) : permet de modifier le mot de passe du compte            |
  | view log : affiche les rapport de log si le mode dev est activé         |
  | admin : permet d'activer ou de désactiver le mode administrateur        |
  | dev : permet d'activer ou de désactiver le mode developpeur             |
@@ -147,23 +146,30 @@ command_sys=("""
  |_________________________________________________________________________|
  """)
 
-apps=("""
-  ____>>>ES/apps<<<________________________________________________________
- |                                    |                                    |
- | outils :                           | microsoft :                        |
- |      -toolbox                      |      -powerpoint                   |
- |      -cmd                          |      -word                         |
- |      -file manager (fm)            |      -excel                        |
- |      -task manager (tm)            |                                    |
- |      -store                        |                                    |
- |                                    |                                    |
- | apps :                             | jeux :                             |
- |      -                             |       -life evol                   |
- |      -                             |       -nuclear ingenior (ni)       |
- |      -                             |       -                            |
- |_________________________________________________________________________|
- 
- """)
+def lister_apps_par_dossier():
+    dossiers = [os.path.join("test", "programs", "game"), os.path.join("test", "programs", "tool"), os.path.join("test", "programs", "other"), os.path.join("test", "sys_apps")] 
+    apps_par_dossier = {}
+    for dossier in dossiers:
+        if os.path.exists(dossier):
+            dossier_nom = os.path.basename(dossier)
+            apps_par_dossier[dossier_nom] = []
+            for root, dirs, files in os.walk(dossier):
+                for file in files:
+                    if file.endswith(('.py', '.exe', '.bat', '.cmd', '.sh')):
+                        apps_par_dossier[dossier_nom].append(file)
+
+
+    print(" ____>>>ES/apps<<<______________________")
+    for dossier, apps in apps_par_dossier.items():
+        print("|", dossier.center(37), "|")
+        if apps:
+            for app in apps:
+                print("|", " " * 5, "-", app.ljust(29), "|")
+        else:
+            print("|", " " * 5, "-".ljust(29), "|")
+        print("|                                       |")
+    print("|_______________________________________|")
+    print("")
 
 cred=("""
  credits : 
@@ -178,20 +184,17 @@ cred=("""
 
  """)
 
-with open("version.txt", "r") as offline_data:
+with open("version.ver", "r") as offline_data:
         data_version=offline_data.read()
         version=data_version.splitlines()
 
         offline_version=version[0]
 
 new=(
- """version actuel de ES :\n"""
- f"""   {offline_version}\n\n"""
- 
  """dernier ajout :\n"""
  """   -modification système de rapport log\n"""
  """   -correction de bug\n"""
- """   -ajout de la commande : hostname\n"""
+ """   -ajout de commande : hostname\n"""
  """   -ajout de l'NUS(New User System)\n"""
  """   -ajout de la batterie sur la commande linux\n"""
  )
@@ -205,7 +208,7 @@ elif system =="Linux":
 else:
     clear ="erreur"
 
-with open("user.txt", "r") as datafile:
+with open("user.dta", "r") as datafile:
     data = datafile.read()
     usersave = data.splitlines()
     user = usersave[0]
@@ -229,17 +232,20 @@ def get_battery_percentage():
         return None
 
 def get_battery_voltage():
-    c = wmi.WMI()
-    battery_info = c.Win32_Battery()[0]
-    if battery_info is not None:
-        try:
-            voltage_str = battery_info.DesignVoltage
-            voltage_int = int(voltage_str)  # Convertir en nombre entier
-            voltage = voltage_int / 1000  # Convertir en volts
-            return voltage
-        except ValueError:
+    try:
+        c = wmi.WMI()
+        battery_info = c.Win32_Battery()[0]
+        if battery_info is not None:
+            try:
+                voltage_str = battery_info.DesignVoltage
+                voltage_int = int(voltage_str)  # Convertir en nombre entier
+                voltage = voltage_int / 1000  # Convertir en volts
+                return voltage
+            except ValueError:
+                return None
+        else:
             return None
-    else:
+    except:
         return None
 
 def get_battery_details():
@@ -297,13 +303,11 @@ def linux_command_user():
     if percentage is not None:
         linux_command = (
             f"{command_colors}┌─[{text_colors}ES {offline_version}{command_colors}]─[{text_colors}user system{command_colors}]─[{text_colors}{user}{command_colors}]─[{text_colors}~{command_colors}]\n"
-            f"{command_colors}└──╼[{text_colors}Battery: {percentage}%{command_colors}]$>>>{text_colors} "
-        )
+            f"{command_colors}└──╼[{text_colors}Battery: {percentage}%{command_colors}]$>>>{text_colors} ")
     else:
         linux_command = (
             f"{command_colors}┌─[{text_colors}ES {offline_version}{command_colors}]─[{text_colors}user system{command_colors}]─[{text_colors}{user}{command_colors}]─[{text_colors}~{command_colors}]\n"
-            f"{command_colors}└──╼[{text_colors}Battery: N/A{command_colors}]$>>>{text_colors} "
-        )
+            f"{command_colors}└──╼[{text_colors}Battery: N/A{command_colors}]$>>>{text_colors} ")
     return linux_command
 """
 linux_command_admin = (
@@ -336,7 +340,7 @@ elif devmode=="no":
     devmode_fr="non développeur"
 
 # NUS
-if os.path.exists("new.txt"):
+if os.path.exists("new.txt") and user != "i":
     os.system(clear)
     print(BANNER)
     print("voici le processus de creation de compte")
@@ -387,10 +391,18 @@ if os.path.exists("new.txt"):
         else:
             os.system(clear)
             print("recommencez")
-
 else:
     pass
 
+if user == "i":
+    def linux_command():
+        return linux_command_user()
+    aide = aide_user
+    gen_parameters = gen_parameters_user
+    autorise = "utilisateur"
+    session_log="no"
+    devmode_fr="non développeur"
+    os.remove("new.txt")
 
 # fonction complex
 def save_config():
@@ -503,6 +515,7 @@ admin_user = "created"
 chat = "created"
 session_part = "none"
 new_session = "yes"
+executed = False
 
 def generer_suite_aleatoire(min_value, max_value, longueur_suite):
     # Générer une ou deux lettres aléatoires
@@ -576,12 +589,40 @@ def create_log(log):
     elif session_log == "no":
         pass
 
-def save_local():
-    cd=os.getcwd()
-    with open(os.path.join(user, "sys_apps", "save_local.txt"), "w+") as local:
-        local.write(cd)
-        local.close()
 
+def list_available_networks():
+    try:
+        if platform.system() == 'Windows':
+            output = subprocess.check_output(['netsh', 'wlan', 'show', 'network']).decode('latin-1')
+            networks = [line.split(':')[1].strip() for line in output.split('\n') if 'SSID' in line]
+        elif platform.system() == 'Linux':
+            output = subprocess.check_output(['iwlist', 'wlan0', 'scan']).decode('latin-1')
+            networks = [line.split(':')[1].strip() for line in output.split('\n') if 'ESSID' in line]
+        else:
+            print("Système d'exploitation non pris en charge.")
+            return
+
+        print("Réseaux disponibles :")
+        for network in networks:
+            print(network)
+    except subprocess.CalledProcessError as e:
+        print("Erreur lors de la récupération des réseaux disponibles:", e)
+
+def connect_to_network(ssid, password):
+    try:
+        if platform.system() == 'Windows':
+            output = subprocess.check_output(['netsh', 'wlan', 'connect', 'name', ssid])
+            if b'already' in output:
+                print(f"Déjà connecté au réseau {ssid}")
+            else:
+                print(f"Connecté au réseau {ssid}")
+        elif platform.system() == 'Linux':
+            output = subprocess.check_output(['nmcli', 'device', 'wifi', 'connect', ssid, 'password', password])
+            print(output.decode('utf-8'))
+        else:
+            print("Système d'exploitation non pris en charge.")
+    except subprocess.CalledProcessError as e:
+        print("Erreur lors de la connexion au réseau:", e)
 
 def hall():
     os.system(clear)
@@ -606,10 +647,8 @@ def Command_Parameters():
     print(couleur + command_sys)
     print()
 
-
 def fetch_file(url, filename):
     urllib.request.urlretrieve(url, filename)
-
 
 def create_user_directory(new_user, password):
     local1 = os.getcwd()
@@ -662,7 +701,6 @@ def check_internet_connection():
     
 def verif_version():
     try:
-        local=os.getcwd()
         os.chdir(location)
         fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.txt", "online_version.txt")
         with open("online_version.txt", "r") as online_data:
@@ -671,13 +709,12 @@ def verif_version():
             online_version=version_online[0]
         os.remove("online_version.txt")
     except Exception as e:
-        online_version = "0.10.5"
+        online_version = "0.10.7"
         error_message = f"an error occurred: {e}"
         session_start_time = datetime.datetime.now()
         if devmode=="yes":
             create_session_log(session_start_time, status=error_message)
 
-    online_version = "0.10.5"
     if online_version==offline_version:
         print("votre système est à jour")
         print("version possedé : ", Fore.RED, offline_version, couleur)
@@ -716,9 +753,58 @@ def print_users():
         print(" | Aucun utilisateur trouvé.                                               |")
     else:
         for user in users:
-            print(f" | - {user}")
+            if user == "test":
+                pass
+            else:
+                print(f" | - {user}")
     print(" |_________________________________________________________________________|")
     print()
+
+def ressencer_apps():
+    dossiers = [os.path.join("test", "programs", "game"), os.path.join("test", "programs", "tool"), os.path.join("test", "programs", "other"), os.path.join("test", "sys_apps")]
+    ressencement = {}
+    for dossier in dossiers:
+        if os.path.exists(dossier):
+            for root, dirs, files in os.walk(dossier):
+                for file in files:
+                    if file.endswith(('.py', '.exe', '.bat', '.cmd', '.sh')):
+                        nom_fichier, extension = os.path.splitext(file)
+                        chemin_complet = os.path.join(root, file)
+                        ressencement[nom_fichier] = {
+                            "nom_normal": file,
+                            "chemin_complet": chemin_complet
+                        }
+    with open("programs.dta", "w") as f:
+        for nom_fichier, infos in ressencement.items():
+            f.write(f"{nom_fichier} : {infos['chemin_complet']}\n")
+
+def executer_programme(nom_commande):
+    actual_loc = os.getcwd()
+    global executed
+    with open("programs.dta", "r") as f:
+        ressencement = {}
+        for line in f:
+            nom_fichier, chemin_complet = line.strip().split(" : ")
+            ressencement[nom_fichier] = chemin_complet
+
+    if nom_commande in ressencement:
+        executed = True
+        chemin_complet = ressencement[nom_commande]
+        if os.path.isfile(chemin_complet):
+            chemin_dossier, nom_fichier = os.path.split(chemin_complet)
+            os.chdir(chemin_dossier)
+            extension = os.path.splitext(nom_fichier)[1]
+            if extension == '.py':
+                os.system(f"python {nom_fichier}")
+            elif extension == '.bat':
+                os.system(nom_fichier)
+            elif extension == ".exe":
+                os.system(nom_fichier)
+            else:
+                os.system(f"./{nom_fichier}")
+            os.chdir(actual_loc)
+    else:
+        executed = False
 
 def list_files_with_creation_dates():
     # Get a list of all files in the directory
@@ -802,7 +888,6 @@ def get_mac_address():
     mac = ':'.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) for ele in range(0, 8 * 6, 8)][::-1])
     return mac
 
-
 def get_system_info():
     system_info = {
         "Système d'exploitation": platform.system(),
@@ -865,6 +950,7 @@ connected, ssl_version = check_internet_connection()
 
 try:
     # initialisation
+    ressencer_apps()
     if session_log=="yes":
         session_start_time = datetime.datetime.now()
         log_filepath = create_session_log(session_start_time)
@@ -1006,13 +1092,11 @@ try:
         pass
     # programme
     while True:
+        ressencer_apps()
         command =input(entry())
         create_log(command)
-
-
         print(couleur)
-
-    # parametre
+        # parametre
         if command =="parametre":
             General_Parameters()
             while True:
@@ -1056,14 +1140,14 @@ try:
                         print("Cette couleur ne fonctionne pas")
                     General_Parameters()
 
-    # parametre de l'entré des commande
+                # parametre de l'entré des commande
                 elif control=="commande":
                     Command_Parameters()
                     while True:
                         command_system = input(entry())
                         create_log(command_system)
         
-        # couleur de commande
+                        # couleur de commande
                         if command_system == "couleur com" or command_system == "cc":
                             while True:
                                 Command_Parameters()
@@ -1127,7 +1211,7 @@ try:
                                 else:
                                     print("Cette couleur ne fonctionne pas")
 
-                            
+                         # couleur du texte de commande   
                         elif command_system == "couleur text" or command_system == "ct":
                             while True:
                                 Command_Parameters()
@@ -1192,7 +1276,7 @@ try:
                                 else:
                                     print("Cette couleur ne fonctionne pas")
 
-        # style visuel commande
+                        # style visuel commande
                         elif command_system=="linux":
                             def entry():
                                 return linux_command()
@@ -1208,7 +1292,7 @@ try:
                                 return ">>> "
                             entry_com = "defaut"
 
-            # retour au parametre généraux
+                        # retour au parametre généraux
                         elif command_system=="close":
                             General_Parameters()
                             break
@@ -1218,7 +1302,7 @@ try:
                             time.sleep(2)
                         Command_Parameters()
 
-            # admin info
+            # aactivation du mode admin
                 elif control=="admin":
                     General_Parameters()
                     with open(os.path.join(user, "system","logs.txt"), "r") as file:
@@ -1264,6 +1348,7 @@ try:
                     else:
                         print("erreur de mot de passe")
 
+                # activation du mode dev
                 elif control=="dev":
                     General_Parameters()
                     if devmode=="yes":
@@ -1277,7 +1362,7 @@ try:
                     with open(os.path.join(user, "system", "admin.txt"), "w") as dev_modif:
                         dev_modif.write(admin+"\n"+devmode)
 
-
+                # systeme de creation des utilisateur
                 elif control=="user":
                     print_users()
                     while True:
@@ -1332,6 +1417,7 @@ try:
                             print_users()
                             print("recommencer")
 
+                # systeme de log
                 elif control=="view log"and devmode=="yes":
                     print(couleur)
                     os.system(clear)
@@ -1373,17 +1459,19 @@ try:
                         else:
                             print("recommencer")
 
-            # info systeme
+                # info systeme ES
                 elif control=="info":
                     General_Parameters()
-                    print(couleur + new)
                     print("mise a jour :")
                     if connected:
                         verif_version()
                     else:
                         print(Fore.RED, "impossible de verifier si votre version est à jour, verifier si vous etes connecté")
                         print(couleur)
+                    print("")
+                    print(couleur + new)
 
+                # maj du systeme
                 elif control=="maj":
                     hall()
                     if connected:
@@ -1397,8 +1485,8 @@ try:
                     else:
                         print("vous n'étes pas connecté")
 
-            # changer le mot de passe
-                elif control=="logs":
+                # changer le mot de passe
+                elif control=="password" or control=="pw":
                     General_Parameters()
                     print("nouveau mot de passe")
                     password=input(entry())
@@ -1409,30 +1497,30 @@ try:
                         logs.close()
                     General_Parameters()
 
-            # fermeture des parametre
+                # fermeture des parametre
                 elif control=="close":
                     hall()
                     save_config()
                     break
 
-        # erreur
+                # erreur
                 else:
                     print("veuillez recommencer")
                     time.sleep(2)
                     General_Parameters()
 
-    # ip info
+        # ip info
         elif command =="IPinfo":
             hall()
             print("ip :\n\n ipv4 : ", ipv4, "\n ipv6 : ", ipv6)
 
-    # mac info
+        # mac info
         elif command =="MACinfo":
             hall()
             print("adresse MAC : \n\n", mac_adress)
             print()
 
-            # os info
+        # os info
         elif command =="os":
             hall()
             system_name = os.name
@@ -1451,7 +1539,23 @@ try:
             else:
                 print("Système d'exploitation non reconnu.")
 
-            # systeme chat
+        # connexion au reseau
+        elif command == "connect":
+            hall()
+            list_available_networks()
+            while True:
+                connecting = input(entry)
+                if connecting == "close":
+                    hall()
+                    break
+                else:
+                    connecting = connecting.split()
+                    try:
+                        connect_to_network(connecting[0], connecting[1])
+                    except:
+                        print("il semble que vous ne pouvez pas vous connecter")
+
+        # systeme chat
         elif command =="chat":
             hall()
             while True:
@@ -1471,10 +1575,14 @@ try:
                     hall()
                     break
 
-            # info sur le systeme
+        # info sur le systeme
         elif command =="info sys":
             hall()
-            print(f"connecté en tant que '{Fore.RED}{user}{couleur}'")
+            if user == "test":
+                print(f"connecté en tant que '{Fore.RED}{user}{couleur}'")
+                print(" (vous avez un compte developpeur système)")
+            else:
+                print(f"connecté en tant que '{Fore.RED}{user}{couleur}'")
             print(f"vous avez un compte {Fore.RED}{autorise}{couleur}")
             print(f"vous avez un compte {Fore.RED}{devmode_fr}{couleur}")
             print()
@@ -1484,7 +1592,7 @@ try:
             battery_details()
             print()
 
-            # verification d'internet
+        # verification d'internet
         elif command =="internet":
             hall()
             if connected:
@@ -1496,7 +1604,7 @@ try:
             else:
                 print("Le PC n'est pas connecté à Internet. ❌")
 
-            # windows defender
+        # windows defender (non fonctionnel)
         elif command=="defend no":
             hall()
             disable_windows_defender()
@@ -1505,21 +1613,29 @@ try:
             hall()
             enable_windows_defender()
 
-            # help
+        # help
         elif command =="aide":
             os.system(clear)
             print(couleur + BANNER)
             print(couleur + aide)
 
-            # clear
+        # clear
         elif command =="clear":
             hall()
+        
+        # systeme exctinction total
+        elif command ==  "exit":
+            os.chdir(local1)
+            with open("etat.dta", "w+")as dta:
+                dta.write("exit")
+            os.system(clear)
+            quit()
 
-            # systeme d'apps
+        # aaffichage des apps prise en charge
         elif command =="apps":
             os.system(clear)
             print(BANNER)
-            print(apps)
+            lister_apps_par_dossier()
 
         # extinction systeme
         elif command =="close":
@@ -1528,6 +1644,7 @@ try:
             session_closed_time = datetime.datetime.now()
             break
 
+        # acces au apps win
         elif command =="powerpoint":
             if os.path.exists(os.path.join("C:", "Program Files", "Microsoft Office", "root", "Office16")):
                 hall()
@@ -1568,32 +1685,30 @@ try:
                 os.chdir(local)
                 hall()
 
+        # acces au apps systeme
         elif command =="cmd":
             hall()
-            save_local()
             local=os.getcwd()
             os.chdir(location)
-            os.chdir(os.path.join(user, "sys_apps"))
+            os.chdir(os.path.join("test", "sys_apps"))
             os.system("python cmd.py")
             os.chdir(local)
             hall()
 
         elif command =="file manager" or command=="fm":
             hall()
-            save_local()
             local=os.getcwd()
             os.chdir(location)
-            os.chdir(os.path.join(user, "sys_apps"))
+            os.chdir(os.path.join("test", "sys_apps"))
             os.system("python file_manager.py")
             os.chdir(local)
             hall()
 
         elif command =="task manager" or command=="tm":
             hall()
-            save_local()
             local=os.getcwd()
             os.chdir(location)
-            os.chdir(os.path.join(user, "sys_apps"))
+            os.chdir(os.path.join("test", "sys_apps"))
             os.system("python task_manager.py")
             os.chdir(local)
             hall()
@@ -1602,11 +1717,11 @@ try:
             hall()
             local=os.getcwd()
             os.chdir(location)
-            os.chdir(os.path.join(user, "programs", "tool", "toolbox"))
-            if os.path.exists(os.path.join(user, "programs", "tool", "toolbox", "toolbox_win.py")):
+            os.chdir(os.path.join("test", "programs", "tool", "toolbox"))
+            if os.path.exists(os.path.join("test", "programs", "tool", "toolbox", "toolbox_win.py")):
                 os.system("python toolbox_win.py")
             else:
-                if os.path.exists(os.path.join(user, "programs", "tool", "toolbox", "toolbox_setup.py")):
+                if os.path.exists(os.path.join("test", "programs", "tool", "toolbox", "toolbox_setup.py")):
                     os.system("python toolbox_setup.py")
                 else:
                     print("toolbox n'est pas installé")
@@ -1617,11 +1732,11 @@ try:
             hall()
             local=os.getcwd()
             os.chdir(location)
-            os.chdir(os.path.join(user, "programs", "games"))
-            if os.path.exists(os.path.join(user, "programs", "games", "life_evol.py")):
+            os.chdir(os.path.join("test", "programs", "games"))
+            if os.path.exists(os.path.join("test", "programs", "games", "life_evol.py")):
                 os.system("python life_evol.py")
             else:
-                if os.path.exists(os.path.join(user, "programs", "games", "life_evol_setup.py")):
+                if os.path.exists(os.path.join("test", "programs", "games", "life_evol_setup.py")):
                     os.system("python life_evol_setup.py")
                 else:
                     print("life evol n'est pas installé")
@@ -1632,28 +1747,27 @@ try:
             hall()
             local=os.getcwd()
             os.chdir(location)
-            os.chdir(os.path.join(user, "programs", "games", "nuclear_ingenior.py"))
+            os.chdir(os.path.join("test", "programs", "games", "nuclear_ingenior.py"))
             os.system("python nuclear_ingenior.py")
             os.chdir(local)
             hall()
 
         elif command =="store":
-            save_local()
             hall()
             local=os.getcwd()
             os.chdir(location)
-            os.chdir(os.path.join(user, "sys_apps"))
+            os.chdir(os.path.join("test", "sys_apps"))
             os.system("python store.py")
             os.chdir(local)
             hall()
 
-            # credits
+        # credits
         elif command =="credits":
             hall()
             print(couleur + cred)
             print("")
 
-            # save des réglages
+        # save/load des réglages
         elif command =="save":
             save_config()
             hall()
@@ -1772,7 +1886,7 @@ try:
                 hall()
                 print("vous n'avez aucune sauvegarde")
 
-            # déplacment dans le pc
+        # déplacment dans le pc
         elif command == "ch..":
             hall()
             try:
@@ -1806,20 +1920,24 @@ try:
             except Exception as e:
                 print(f"Erreur lors du changement de répertoire : {e}")
 
-            # hostname
+        # hostname
         elif command =="hostname" or command =="hn":
             hall()
             print("nom de la machine : ", Fore.RED, host, couleur)
 
+        # battery
         elif command =="battery" or command =="bat":
             hall()
             battery_details()
     
-            # commande de cmd
+        # commande de cmd
         else:
+            executer_programme(command)
             hall()
-            print(command_colors + "\n>>> " + text_colors + command + "\n")
-            os.system(command)
+            if executed == False:
+                hall()
+                print(command_colors + "\n>>> " + text_colors + command + "\n")
+                os.system(command)
 
 except Exception as e:
     # En cas d'erreur, enregistrez un message d'erreur dans le fichier de log
@@ -1827,7 +1945,7 @@ except Exception as e:
     session_start_time = datetime.datetime.now()
     if devmode=="yes":
         create_session_log(session_start_time, status=error_message)
-        print(error_message)
+    print(error_message)
 
 session_start_time = datetime.datetime.now()
 if devmode=="yes":

@@ -13,32 +13,28 @@ elif system == "Linux":
     directory = "ls"
 else:
     clear = "erreur"
-direct = os.getcwd()
 
 couleur = Fore.GREEN
 command_colors = Fore.CYAN
 text_colors = Fore.BLUE
 
-with open("save_local.txt", "r") as local:
-    locat = local.read()
-    loc = locat.splitlines()
-    cd = loc[0]
-locat = os.getcwd()
-os.chdir(cd)
+os.chdir("..")
+os.chdir("..")
+direct = os.getcwd()
 
-with open("version.txt", "r") as offline_data:
+with open("version.ver", "r") as offline_data:
         data_version=offline_data.read()
         version=data_version.splitlines()
 
         offline_version=version[0]
 
-with open("user.txt", "r") as datafile:
+with open("user.dta", "r") as datafile:
     data = datafile.read()
     usersave = data.splitlines()
     user = usersave[0]
 
 linux_command = (
-    f"{command_colors}┌─[{text_colors}file manager 0.10.3{command_colors}]─[{text_colors}administrator system{command_colors}]─[{text_colors}~{command_colors}]\n"
+    f"{command_colors}┌─[{text_colors}file manager {offline_version}{command_colors}]─[{text_colors}administrator system{command_colors}]─[{text_colors}~{command_colors}]\n"
     f"{command_colors}└──╼[{text_colors}★{command_colors}]$>>>{text_colors} ")
 win_command=text_colors + os.getcwd() + command_colors + ">>>" + text_colors 
 
@@ -95,7 +91,6 @@ storage_used_bar_color=Fore.GREEN + Style.BRIGHT
 storage_no_used_bar_color=Fore.RED + Style.BRIGHT
 font_color=Style.RESET_ALL + couleur
 
-os.chdir(locat)
 
 def convert_bytes(num, suffix='o'):
     for unit in [' ', ' K', ' M', ' G', ' T', ' P', ' E', ' Z']:
@@ -160,9 +155,7 @@ def hall():
     print()
     print_file_manager()
     print()
-
-os.chdir(cd)
-direct = cd
+direct
 hall()
 while True:
     print(direct)
