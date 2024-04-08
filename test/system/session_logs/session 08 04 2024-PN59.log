@@ -1,0 +1,5 @@
+[08:51:10 04/08/2024] Session created
+[08:51:33] log: apps
+[09:04:06] log: cleaner
+[09:04:06 04/08/2024] session closed because an error occurred: [Errno 22] Invalid argument: 'programs.dta'
+[09:04:06 04/08/2024] Session closed

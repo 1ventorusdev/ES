@@ -29,7 +29,7 @@ def maj():
     parentdir()
     parentdir()
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/launcher.py", "launcher.py")
-    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/test/ES.py", "ES.py")
+    fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/ES.py", "ES.py")
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/ES_setup.py", "ES_setup.py")
     fetch_file("https://raw.githubusercontent.com/1ventorusdev/ES/main/version.ver", "version.ver")
     os.chdir("test")
