@@ -87,7 +87,7 @@ def install():
         data.write("admin"+"\n"+"yes")
 
     with open("save_config.txt", "w+") as save:
-            save.write("lin\n"+ "vert\n"+ "rouge\n"+ "bleu\n")
+            save.write("lin\n"+ "cyan\n"+ "cyan\n"+ "bleu\n")
 
     os.chdir(os.path.join(locat, "test"))
     programs_dir = os.path.join("programs")
