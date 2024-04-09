@@ -3,6 +3,7 @@ import ssl
 import socket
 import platform
 import urllib.request
+import hashlib
 
 BANNER =("""
  ######## ##     ## ######## ########   ######   ######## ##    ##  ######  ##    ## 
@@ -43,6 +44,9 @@ Help = ("""
 def fetch_file(url, filename):
     urllib.request.urlretrieve(url, filename)
 
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
 def check_internet_connection():
     try:
         socket.create_connection(("www.google.com", 443))
@@ -77,7 +81,7 @@ def install():
     os.mkdir(system_dir)
     os.chdir(system_dir)
     with open("logs.txt", "w+") as data:
-        data.write("test")
+        data.write(hash_password("test"))
 
     with open("admin.txt", "w+") as data:
         data.write("admin"+"\n"+"yes")
